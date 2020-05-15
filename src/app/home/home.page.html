@@ -1,14 +1,52 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+    <!-- <ion-grid style="height: 100%;">
+        <ion-row justify-content-center align-items-center style="height: 100%;">
+            <ion-col size=12 size-sm=10 offset-sm=1 size-md=8 offset-md=2 size-lg=6 offset-xl=4>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title style="text-align: center;">
+                            User login
+                        </ion-card-title>
+                    </ion-card-header>
+                </ion-card>
+
+                <ion-card-content>
+                    <ion-item>
+                        <ion-label position="stacked">Username</ion-label>
+                        <ion-input placeholder="Enter your username" type="text"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Password</ion-label>
+                        <ion-input placeholder="Enter your password" type="password"></ion-input>
+                    </ion-item>
+                    <ion-button color="primary" expand="block" [routerLink]="['/login']" routerLinkActive="router-link-active">Login</ion-button>
+                    <ion-button color="warning" expand="block" [routerLink]="['/register']" routerLinkActive="router-link-active">Register</ion-button>
+                </ion-card-content>
+            </ion-col>
+        </ion-row>
+    </ion-grid> -->
+
+    <ion-item>
+        <ion-input type="text" placeholder="My QR Data" [(ngModel)]="qrData"></ion-input>
+    </ion-item>
+    <ion-button button icon-left expand="block" (click)="createCode()">
+        <ion-icon name="barcode"></ion-icon> Create Code
+    </ion-button>
+    <ion-button button icon-left expand="block" (click)="scanCode()">
+        <ion-icon name="qr-scanner"></ion-icon> Scan Code
+    </ion-button>
+    <ion-card *ngIf="createdCode">
+        <ngx-qrcode [qrc-value]="createdCode" [qrc-element-type]="elementType"></ngx-qrcode>
+    </ion-card>
+    <ion-card *ngIf="scannedCode">
+        <ion-card-content>
+            Result from Scan: {{ scannedCode }}
+            <ion-button button icon-left expand="block" *ngIf="scannedCode" (click)="downloadQR()">
+                <ion-icon name="download"></ion-icon> Download QR Code
+            </ion-button>
+        </ion-card-content>
+    </ion-card>
 </ion-content>

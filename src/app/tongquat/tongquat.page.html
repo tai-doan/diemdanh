@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Điểm danh sinh viên</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card>
+        <ion-card-header>
+            <h1>Chào {{auth.userlogin.tengv}}</h1>
+        </ion-card-header>
+        <ion-card-content>
+            <p>Để tạo mã QR cho sinh viên điểm danh tự động vui lòng chọn tạo mã của lớp đang online</p>
+        </ion-card-content>
+    </ion-card>
+    <ion-list>
+        <ion-item-sliding *ngFor="let item of auth.lop">
+            <ion-item>
+                <ion-label>
+                    <h2>{{item.tenlop}}</h2>
+                    <p *ngFor="let a of item.lichday">{{a.thuday}} - {{a.gioday.giobd}} -> {{a.gioday.giokt}}</p>
+                </ion-label>
+                <ion-badge *ngIf="checkSTT(item.lichday)" slot="end">online</ion-badge>
+                <ion-badge *ngIf="!checkSTT(item.lichday)" slot="end" color="danger">offline</ion-badge>
+                <ion-icon *ngIf="checkSTT(item.lichday)" (click)="createQR(item.key)" name="barcode" color="success"></ion-icon>
+            </ion-item>
+            <ion-item-options side="start" (ionSwipe)="update()">
+                <!-- <ion-item-option>Favorite</ion-item-option> -->
+            </ion-item-options>
+            <ion-item-options side="end" (ionSwipe)="update()">
+                <!-- <ion-item-option>Unread</ion-item-option> -->
+            </ion-item-options>
+        </ion-item-sliding>
+        <ion-card *ngIf="show">
+            <ion-card-content>
+                <!-- <ion-item>
+                    <ion-input type="text" placeholder="My QR Data" [(ngModel)]="qrData"></ion-input>
+                </ion-item> -->
+                <ion-button button icon-left expand="block" (click)="createCode()">
+                    <ion-icon name="barcode"></ion-icon> Create Code
+                </ion-button>
+                <ngx-qrcode [qrc-value]="createdCode" [qrc-element-type]="elementType"></ngx-qrcode>
+                <ion-button button *ngIf="createdCode" icon-left expand="block" (click)="downloadQR()">
+                    <ion-icon name="download"></ion-icon> Download QR Code
+                </ion-button>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+</ion-content>

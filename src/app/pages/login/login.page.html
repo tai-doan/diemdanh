@@ -1,0 +1,31 @@
+<ion-header>
+</ion-header>
+
+<ion-content class="background-full">
+    <ion-grid style="height: 100%;">
+        <ion-row justify-content-center align-items-center style="height: 100%;">
+            <ion-col size=12 size-sm=10 offset-sm=1 size-md=8 offset-md=2 size-lg=6 offset-xl=4>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title style="text-align: center;">
+                            User login
+                        </ion-card-title>
+                    </ion-card-header>
+                </ion-card>
+
+                <ion-card-content [ngStyle]="{'background': transparent}">
+                    <ion-item class="top-form">
+                        <ion-label position="stacked">Username</ion-label>
+                        <ion-input [(ngModel)]="user.email" placeholder="Enter your username" type="text"></ion-input>
+                    </ion-item>
+                    <ion-item class="bot-form">
+                        <ion-label position="stacked">Password</ion-label>
+                        <ion-input [(ngModel)]="user.password" placeholder="Enter your password" type="password"></ion-input>
+                    </ion-item>
+                    <ion-button color="warning" expand="block" (click)="Login()">Login</ion-button>
+                    <!-- <p>If you don't have account. Please register <a [routerLink]="['/register']" routerLinkActive="router-link-active">here</a></p> -->
+                </ion-card-content>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
