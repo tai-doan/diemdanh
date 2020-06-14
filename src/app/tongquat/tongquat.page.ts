@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
 import { ToastController } from '@ionic/angular';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-tongquat',
@@ -19,21 +20,23 @@ export class TongquatPage implements OnInit {
   keys;
   constructor(private auth: AuthService, public toast: ToastController, private base64ToGallery: Base64ToGallery) { 
     this.auth.getLOP();
+    this.getTime();
   }
 
   ngOnInit() {
-    // => get hours
-    this.hours= new Date().getHours();
-    // => get mins
-    this.min= new Date().getMinutes();
-    // => get thứ
-    this.thu= new Date().getDay();
-    console.log("thứ hiện tại: "+this.thu); // => xuất thứ 1...7
-    console.log("giờ hiện tại: "+this.hours+" : "+this.min); // => xuất giờ phút hiện tại
-    setTimeout(() => {
-      this.ngOnInit();
+    setInterval(() => {
+      this.getTime();
     }, 60000);
   }
+  // Get time online
+  getTime(){
+    this.hours= new Date().getHours();
+    this.min= new Date().getMinutes();
+    this.thu= new Date().getDay();
+    console.log(this.hours+":"+this.min)
+  }
+
+  // Download QR
   downloadQR(){
     const canvas= document.querySelector('canvas') as HTMLCanvasElement;
     const imageData= canvas.toDataURL('image/jpeg').toString();
@@ -49,6 +52,8 @@ export class TongquatPage implements OnInit {
       console.log('err: ', err);
     });
   }
+
+  // Create ID random
   makeid(length) {
     var result='';
     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -77,68 +82,50 @@ export class TongquatPage implements OnInit {
   // function check lịch dạy có đang online
   checkSTT(lichday){
     var thuday;
-    for(let i=0; i< lichday.length; i++){
-      switch (lichday[i].thuday) {
-        case 'thứ hai':
-          thuday= 1;
-          break;
-        case 'thứ ba':
-          thuday= 2;
-          break;
-        case 'thứ tư':
-          thuday= 3;
-          break;
-        case 'thứ năm':
-          thuday= 4;
-          break;
-        case 'thứ sáu':
-          thuday= 5;
-          break;
-        case 'thứ bảy':
-          thuday= 6;
-          break;
-        case 'chủ nhật':
-          thuday= 0;
-          break;
-      }
-      // => get giờ phút bắt đầu
-      let hs=parseInt(lichday[i].gioday.giobd.slice(0,2));
-      let ms=parseInt(lichday[i].gioday.giobd.slice(3,5));
-      // console.log("giờ bđ: "+hs+" : "+ms);
-      // => get giờ phút kết thúc
-      let he=parseInt(lichday[i].gioday.giokt.slice(0,2));
-      let me=parseInt(lichday[i].gioday.giokt.slice(3,5));
-      // console.log("giờ kt: "+he+" : "+me);
-      let x= true;
-      if((hs < this.hours) && (he > this.hours) && (thuday === this.thu)){
-        return x;
+    switch (lichday.thuday) {
+      case 'thứ hai':
+        thuday= 1;
+        break;
+      case 'thứ ba':
+        thuday= 2;
+        break;
+      case 'thứ tư':
+        thuday= 3;
+        break;
+      case 'thứ năm':
+        thuday= 4;
+        break;
+      case 'thứ sáu':
+        thuday= 5;
+        break;
+      case 'thứ bảy':
+        thuday= 6;
+        break;
+      case 'chủ nhật':
+        thuday= 0;
+        break;
+    }
+    // => get giờ phút bắt đầu
+    let hs=parseInt(lichday.gioday.giobd.slice(0,2));
+    let ms=parseInt(lichday.gioday.giobd.slice(3,5));
+    // console.log("giờ bđ: "+hs+" : "+ms);
+    // => get giờ phút kết thúc
+    let he=parseInt(lichday.gioday.giokt.slice(0,2));
+    let me=parseInt(lichday.gioday.giokt.slice(3,5));
+    // console.log("giờ kt: "+he+" : "+me);
+
+    if(thuday != this.thu){
+      return false;
+    }else{
+      if( (hs < this.hours) && (he > this.hours) ){
+        return true;
       }else{
-        if((hs === this.hours) && (ms < this.min)){
-          x= false;
-          return x;
+        if( (hs === this.hours) && (ms <= this.min) && (he === this.hours) && (me >= this.min) ){
+          return true;
         }else{
-          if((hs === this.hours) && (ms >= this.min)){
-            x= true;
-            return x;
-          }
-        }
-        if((he === this.hours) && (me < this.min)){
-          x= false;
-          return x;
-        }else{
-          if((he === this.hours) && (me >= this.min)){
-            x= true;
-            return x;
-          }
+          return false;
         }
       }
-      // if((hs <= this.hours) && (ms <= this.min) && (he >= this.hours) && (me >= this.min) && (thuday === this.thu)){
-      //   console.log("true");
-      //   return true;
-      // }else{
-      //   console.log("false")
-      //   return false;
-      // }
     }
   }
   async noted(){

@@ -14,15 +14,16 @@
         </ion-card-content>
     </ion-card>
     <ion-list>
-        <ion-item-sliding *ngFor="let item of auth.lop">
+        <ion-item-sliding *ngFor="let item of auth.mon">
             <ion-item>
                 <ion-label>
-                    <h2>{{item.tenlop}}</h2>
-                    <p *ngFor="let a of item.lichday">{{a.thuday}} - {{a.gioday.giobd}} -> {{a.gioday.giokt}}</p>
+                    <h2>{{item.tenmonhoc}}</h2>
+                    <!-- <h2>{{item.id}}</h2> -->
+                    <p>{{item.lichday.thuday}} - {{item.lichday.gioday.giobd}} -> {{item.lichday.gioday.giokt}}</p>
                 </ion-label>
                 <ion-badge *ngIf="checkSTT(item.lichday)" slot="end">online</ion-badge>
                 <ion-badge *ngIf="!checkSTT(item.lichday)" slot="end" color="danger">offline</ion-badge>
-                <ion-icon *ngIf="checkSTT(item.lichday)" (click)="createQR(item.key)" name="barcode" color="success"></ion-icon>
+                <ion-icon *ngIf="checkSTT(item.lichday)" (click)="createQR(item.id)" name="barcode" color="success"></ion-icon>
             </ion-item>
             <ion-item-options side="start" (ionSwipe)="update()">
                 <!-- <ion-item-option>Favorite</ion-item-option> -->
@@ -39,7 +40,7 @@
                 <ion-button button icon-left expand="block" (click)="createCode()">
                     <ion-icon name="barcode"></ion-icon> Create Code
                 </ion-button>
-                <ngx-qrcode [qrc-value]="createdCode" [qrc-element-type]="elementType"></ngx-qrcode>
+                <ngx-qrcode [(qrc-value)]="createdCode"></ngx-qrcode>
                 <ion-button button *ngIf="createdCode" icon-left expand="block" (click)="downloadQR()">
                     <ion-icon name="download"></ion-icon> Download QR Code
                 </ion-button>

@@ -10,7 +10,7 @@ export class AuthService {
   userlogin: any;
   UsersRef: AngularFireList < any > = null;
   ClassRef: AngularFireList < any > = null;
-  lop: any;
+  mon: any;
   returnUrl: string;
   constructor(private router: Router,private db: AngularFireDatabase, private route: ActivatedRoute) { 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -21,9 +21,9 @@ export class AuthService {
     .pipe(map(items => { // <== new way of chaining
         return items.map(a => {
             const data = a.payload.val();
-            const key = a.payload.key;
+            const id = a.payload.key;
             return {
-                key, ...data
+                id, ...data
             }; // or {key, ...data} in case data is Obj
         });
     })).subscribe(user => {
@@ -37,10 +37,10 @@ export class AuthService {
     });
   }
   getLOP(){
-    this.lop=this.userlogin.lop;
+    this.mon=this.userlogin.mon;
   }
   pushQR(key, data){
-    this.ClassRef =  this.db.list('LOP');
+    this.ClassRef =  this.db.list('MonHoc');
     this.ClassRef.update(key, {"qr": data});
     // 3p sau delete qr-code on database
     setTimeout(() => {
