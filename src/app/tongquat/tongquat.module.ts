@@ -8,13 +8,14 @@ import { TongquatPageRoutingModule } from './tongquat-routing.module';
 
 import { TongquatPage } from './tongquat.page';
 
+
 @NgModule({
   imports: [
     CommonModule,
     NgxQRCodeModule,
     FormsModule,
     IonicModule,
-    TongquatPageRoutingModule
+    TongquatPageRoutingModule,
   ],
   declarations: [TongquatPage]
 })

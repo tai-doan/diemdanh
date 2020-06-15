@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
-import { ToastController } from '@ionic/angular';
+import { RegisterPage } from '../pages/register/register.page';
+import { ToastController, ModalController } from '@ionic/angular';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-tongquat',
@@ -18,7 +18,7 @@ export class TongquatPage implements OnInit {
   elementType: 'url' | 'canvas' | 'img' = 'canvas';
   show= false;
   keys;
-  constructor(private auth: AuthService, public toast: ToastController, private base64ToGallery: Base64ToGallery) { 
+  constructor(public modalController: ModalController, private auth: AuthService, public toast: ToastController, private base64ToGallery: Base64ToGallery) { 
     this.auth.getLOP();
     this.getTime();
   }
@@ -28,6 +28,18 @@ export class TongquatPage implements OnInit {
       this.getTime();
     }, 60000);
   }
+  
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: RegisterPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        'data': this.auth.mon
+      }
+    });
+    return await modal.present();
+  }
+
   // Get time online
   getTime(){
     this.hours= new Date().getHours();
