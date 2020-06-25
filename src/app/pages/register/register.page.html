@@ -7,25 +7,34 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-grid style="height: 100%;">
-        <ion-row class="ion-justify-content-center" style="height: 100%;">
-            <ion-col size=12 size-sm=10 offset-sm=1 size-md=8 offset-md=2 size-lg=6 offset-xl=4>
-                <ion-list>
-                    <ion-item *ngFor="let item of auth.St">
-                        <ion-label>{{item.tensv}}</ion-label>
-                        <input (change)="onChange($event.target.checked, item)" type="checkbox" id="{{item.id}}">
-                        <!-- <ion-checkbox (onChange)="onChange($event.target.checked, item)" slot="end" value="{{item.id}}"></ion-checkbox> -->
-                    </ion-item>
-                </ion-list>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+<ion-content fullscreen>
+    <ion-list *ngIf="auth.diemdanhSTT">
+        <ion-item lines="inset">
+            <ion-label color="primary">Check all</ion-label>
+            <ion-checkbox color="danger" (click)="checkAll()"></ion-checkbox>
+        </ion-item>
+        <ion-item *ngFor="let item of auth.Student">
+            <ion-label>{{item.tensv}}</ion-label>
+            <ion-checkbox [checked]="onCheck" color="success" (ionChange)="onChange($event.target.checked, item)" slot="end" value="{{item.id}}"></ion-checkbox>
+        </ion-item>
+    </ion-list>
+    <ion-card *ngIf="!auth.diemdanhSTT">
+        <ion-card-header>
+            <h3>Danh sách đã điểm danh</h3>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-list>
+                <ion-item lines="inset" *ngFor="let item of auth.daDiemDanh">
+                    <ion-label>{{item.tensv}}</ion-label>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
 
 <ion-footer *ngIf="auth.diemdanhSTT" class="ion-no-border">
     <ion-toolbar>
-        <ion-button (click)="diemdanh()" expand="block" fill="clear" shape="round">
+        <ion-button (click)="diemdanh()" expand="block" color="tertiary">
             Điểm danh ngay
         </ion-button>
     </ion-toolbar>

@@ -9,15 +9,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class AuthService {
   userlogin: any;
   UsersRef: AngularFireList < any > = null;
-  StRef: AngularFireList < any > = null;
+  StudentRef: AngularFireList < any > = null;
   ClassRef: AngularFireList < any > = null;
-  mon: any;
-  returnUrl: string;
   BuoiRef: AngularFireList < any > = null;
-  buoi;
-  St;
-  keyUpdate;
-  diemdanhSTT= true;
+  mon: any; // array mon of teacher
+  returnUrl: string;
+  Buoi; // Lenght of buoi in MonHoc
+  Student; // All student in mon
+  keyUpdate; // Key updatẻd of diemdanh
+  diemdanhSTT= true; // Status diemdanh
+  daDiemDanh=[]; // list student diemdanh
   constructor(private router: Router,private db: AngularFireDatabase, private route: ActivatedRoute) { 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
@@ -46,7 +47,7 @@ export class AuthService {
             }; // or {key, ...data} in case data is Obj
         });
     })).subscribe(data => {
-      this.buoi= data;
+      this.Buoi= data;
       console.log(data.length);
     })
   }
@@ -74,8 +75,8 @@ export class AuthService {
   }
 
   getListSV(idmon){
-    this.StRef = this.db.list(`MonHoc/${idmon}/listsv`);
-    this.StRef.snapshotChanges()
+    this.StudentRef = this.db.list(`MonHoc/${idmon}/listsv`);
+    this.StudentRef.snapshotChanges()
     .pipe(map(items => { // <== new way of chaining
         return items.map(a => {
             const data = a.payload.val();
@@ -85,12 +86,14 @@ export class AuthService {
             }; // or {key, ...data} in case data is Obj
         });
     })).subscribe(data => {
-      this.St= data;
+      this.Student= data;
     })
   }
+
   getLOP(){
     this.mon=this.userlogin.mon;
   }
+
   pushQR(key, data){
     this.ClassRef =  this.db.list('MonHoc');
     this.ClassRef.update(key, {"qr": data});

@@ -29,14 +29,15 @@ export class TongquatPage implements OnInit {
     }, 60000);
   }
   
-  async presentModal() {
+  async presentModal(data) {
     const modal = await this.modalController.create({
       component: RegisterPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        'data': this.auth.mon
+        'data': data
       }
     });
+    console.log(data)
     return await modal.present();
   }
 
@@ -132,7 +133,7 @@ export class TongquatPage implements OnInit {
       if( (hs < this.hours) && (he > this.hours) ){
         return true;
       }else{
-        if( (hs === this.hours) && (ms <= this.min) && (he === this.hours) && (me >= this.min) ){
+        if( (hs === this.hours) && (ms <= this.min) || (he === this.hours) && (me >= this.min) ){
           return true;
         }else{
           return false;

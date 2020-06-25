@@ -9,14 +9,39 @@ import { AuthService } from '../../service/auth.service';
 })
 export class RegisterPage implements OnInit {
   @Input() data; // data môn dạy của GV
-  mon;
   listDD= [];
+  onCheck= false;
+  st;
   constructor(public modalController: ModalController, private auth: AuthService) {
   }
 
   ngOnInit() {
-    this.auth.getListSV(this.data[0].id);
-    this.auth.demBuoi(this.data[0].id);
+    console.log(this.data);
+    this.auth.getListSV(this.data.id);
+    this.auth.demBuoi(this.data.id);
+    this.st= this.auth.Student;
+  }
+
+  checkAll(){
+    this.onCheck= !this.onCheck;
+    if(this.onCheck){
+      this.listDD= this.auth.Student;
+    }else{
+      this.listDD= [];
+    }
+  }
+
+  // function when edit class of GV when add new GV
+  onChange(checked, item){
+    if(this.onCheck == false){
+      if(checked && this.listDD.indexOf(item) == -1){
+        this.listDD.push(item);
+        console.log(this.listDD);
+      }else{
+        this.listDD.splice(this.listDD.indexOf(item) , 1)
+        console.log(this.listDD);
+      }
+    }
   }
 
   dismissModal() {
@@ -26,25 +51,14 @@ export class RegisterPage implements OnInit {
       'dismissed': true
     });
   }
-
-  // function when edit class of GV when add new GV
-  onChange(checked, item){
-    if(checked){
-      this.listDD.push(item);
-      console.log(this.listDD);
-    }else{
-      this.listDD.splice(this.listDD.indexOf(item) , 1)
-      console.log(this.listDD);
-    }
-  }
   
   async diemdanh(){
+    this.auth.daDiemDanh= this.listDD;
     this.auth.diemdanhSTT= false;
-    await this.auth.themBuoi(this.data[0].id);
-    let comat=[];
-    for(let i=0; i< this.listDD.length; i++){
-      await comat.push(this.listDD[i].tensv);
-    }
-    this.auth.diemdanhSV(comat, this.data[0].id);
+    await this.auth.themBuoi(this.data.id);
+    let comat=this.listDD;
+    // console.log(comat);
+    console.log("ID: "+this.data.id);
+    this.auth.diemdanhSV(comat, this.data.id);
   }
 }
