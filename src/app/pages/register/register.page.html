@@ -9,15 +9,20 @@
 
 <ion-content fullscreen>
     <ion-list *ngIf="auth.diemdanhSTT">
-        <ion-item lines="inset">
+        <!-- <ion-item lines="inset">
             <ion-label color="primary">Check all</ion-label>
-            <ion-checkbox color="danger" (click)="checkAll()"></ion-checkbox>
-        </ion-item>
+            <ion-checkbox [checked]="tick" color="danger" (ionChange)="checkAll()"></ion-checkbox>
+        </ion-item> -->
         <ion-item *ngFor="let item of auth.Student">
             <ion-label>{{item.tensv}}</ion-label>
-            <ion-checkbox [checked]="onCheck" color="success" (ionChange)="onChange($event.target.checked, item)" slot="end" value="{{item.id}}"></ion-checkbox>
+            <ion-checkbox [checked]="checked" color="success" (ionChange)="onChange($event.target.checked, item)" slot="end" value="{{item.id}}"></ion-checkbox>
         </ion-item>
     </ion-list>
+    <ion-card *ngIf="!auth.Student">
+        <ion-card-header>
+            <h3>Lớp chưa có sinh viên nào</h3>
+        </ion-card-header>
+    </ion-card>
     <ion-card *ngIf="!auth.diemdanhSTT">
         <ion-card-header>
             <h3>Danh sách đã điểm danh</h3>
@@ -34,7 +39,7 @@
 
 <ion-footer *ngIf="auth.diemdanhSTT" class="ion-no-border">
     <ion-toolbar>
-        <ion-button (click)="diemdanh()" expand="block" color="tertiary">
+        <ion-button [disabled]="listDD.length== 0" (click)="diemdanh()" expand="block" color="tertiary">
             Điểm danh ngay
         </ion-button>
     </ion-toolbar>

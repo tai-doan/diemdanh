@@ -11,6 +11,8 @@ export class RegisterPage implements OnInit {
   @Input() data; // data môn dạy của GV
   listDD= [];
   onCheck= false;
+  checked= false;
+  tick= false;
   st;
   constructor(public modalController: ModalController, private auth: AuthService) {
   }
@@ -23,11 +25,15 @@ export class RegisterPage implements OnInit {
   }
 
   checkAll(){
-    this.onCheck= !this.onCheck;
-    if(this.onCheck){
-      this.listDD= this.auth.Student;
+    this.onCheck= !this.checkAll;
+    this.tick= true;
+    this.checked= !this.checked;
+    if(this.onCheck && this.tick){
+      this.listDD = this.auth.Student;
+      console.log(this.listDD);
     }else{
       this.listDD= [];
+      console.log(this.listDD);
     }
   }
 
@@ -37,8 +43,12 @@ export class RegisterPage implements OnInit {
       if(checked && this.listDD.indexOf(item) == -1){
         this.listDD.push(item);
         console.log(this.listDD);
+        if(this.listDD.length == this.auth.Student.length){
+          this.tick= true;
+        }
       }else{
-        this.listDD.splice(this.listDD.indexOf(item) , 1)
+        this.listDD.splice(this.listDD.indexOf(item) , 1);
+        this.tick= false;
         console.log(this.listDD);
       }
     }

@@ -94,9 +94,23 @@ export class AuthService {
     this.mon=this.userlogin.mon;
   }
 
-  pushQR(key, data){
-    this.ClassRef =  this.db.list('MonHoc');
-    this.ClassRef.update(key, {"qr": data});
+  async pushQR(key, data){
+    this.ClassRef = await this.db.list('MonHoc');
+    await this.ClassRef.update(key, {"qr": data});
+    this.diemdanhSTT=!this.diemdanhSTT;
+    let j= await this.db.list(`MonHoc/${key}/diemdanh`).push({}).key;
+    let date= new Date().toLocaleDateString();
+    await this.db.list(`MonHoc/${key}/diemdanh`).update(j, {id: j, ngay: date});
+
+    let dt;
+    this.db.list(`MonHoc/${key}/diemdanh`).valueChanges().subscribe(data => {
+      dt= data;
+      this.db.list(`MonHoc/${key}/diemdanh/${dt[dt.length-1].id}/comat`).valueChanges().subscribe(data =>{
+        this.daDiemDanh= data;
+        console.log(this.daDiemDanh);
+      })
+    })
+    
     // 3p sau delete qr-code on database
     setTimeout(() => {
       this.ClassRef.update(key, {"qr": null})
